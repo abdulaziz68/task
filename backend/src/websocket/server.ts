@@ -53,6 +53,7 @@ export class WebSocketService {
           try {
             const data = JSON.parse(message.toString());
             console.log('Received message:', data);
+            this.handleMessage(ws, data);
           } catch (error) {
             console.error('Error parsing message:', error);
           }
@@ -74,7 +75,8 @@ export class WebSocketService {
 
         ws.send(JSON.stringify({
           type: 'connected',
-          message: 'Successfully connected to WebSocket server'
+          message: 'Successfully connected to WebSocket server',
+          timestamp: new Date().toISOString()
         }));
 
       } catch (error) {
@@ -83,6 +85,7 @@ export class WebSocketService {
       }
     });
 
+    // Heartbeat mechanism
     const interval = setInterval(() => {
       this.wss.clients.forEach((ws: AuthenticatedWebSocket) => {
         if (ws.isAlive === false) {
@@ -98,12 +101,48 @@ export class WebSocketService {
     });
   }
 
+  private handleMessage(ws: AuthenticatedWebSocket, data: any) {
+    switch (data.type) {
+      case 'ping':
+        ws.send(JSON.stringify({ type: 'pong', timestamp: new Date().toISOString() }));
+        break;
+      case 'subscribe':
+        // Handle subscription to specific entities
+        break;
+      default:
+        console.log('Unknown message type:', data.type);
+    }
+  }
+
   public async sendNotification(userId: number, notification: any) {
     const userClients = this.clients.get(userId);
-    if (userClients) {
+    
+    // Save notification to database
+    try {
+      await pool.query(
+        `INSERT INTO notifications (user_id, type, title, message, related_entity_type, related_entity_id)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [
+          userId,
+          notification.type,
+          notification.title,
+          notification.message,
+          notification.related_entity_type,
+          notification.related_entity_id
+        ]
+      );
+    } catch (error) {
+      console.error('Error saving notification to database:', error);
+    }
+
+    // Send via WebSocket if user is online
+    if (userClients && userClients.size > 0) {
       const message = JSON.stringify({
         type: 'notification',
-        data: notification
+        data: {
+          ...notification,
+          timestamp: new Date().toISOString()
+        }
       });
 
       userClients.forEach((client) => {
@@ -112,28 +151,43 @@ export class WebSocketService {
         }
       });
     }
-
-    await pool.query(
-      `INSERT INTO notifications (user_id, type, title, message, related_entity_type, related_entity_id)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [
-        userId,
-        notification.type,
-        notification.title,
-        notification.message,
-        notification.related_entity_type,
-        notification.related_entity_id
-      ]
-    );
   }
 
   public broadcast(message: any) {
-    const messageStr = JSON.stringify(message);
+    const messageStr = JSON.stringify({
+      ...message,
+      timestamp: new Date().toISOString()
+    });
+    
     this.wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(messageStr);
       }
     });
+  }
+
+  public sendToUser(userId: number, message: any) {
+    const userClients = this.clients.get(userId);
+    if (userClients) {
+      const messageStr = JSON.stringify({
+        ...message,
+        timestamp: new Date().toISOString()
+      });
+
+      userClients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(messageStr);
+        }
+      });
+    }
+  }
+
+  public getOnlineUsers(): number[] {
+    return Array.from(this.clients.keys());
+  }
+
+  public isUserOnline(userId: number): boolean {
+    return this.clients.has(userId) && (this.clients.get(userId)?.size || 0) > 0;
   }
 }
 
@@ -141,6 +195,7 @@ let wsService: WebSocketService | null = null;
 
 export const initializeWebSocket = (server: Server): WebSocketService => {
   wsService = new WebSocketService(server);
+  console.log('WebSocket server initialized');
   return wsService;
 };
 

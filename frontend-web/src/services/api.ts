@@ -118,4 +118,18 @@ export const dashboardAPI = {
   getStats: () => api.get('/dashboard/stats'),
 };
 
+export const commentsAPI = {
+  getByEntity: (entityType: string, entityId: number) => 
+    api.get(`/comments/${entityType}/${entityId}`),
+  create: (data: any) => api.post('/comments', data),
+  update: (id: number, data: any) => api.put(`/comments/${id}`, data),
+  delete: (id: number) => api.delete(`/comments/${id}`),
+};
+
+export const activityLogsAPI = {
+  getAll: (params?: any) => api.get('/activity-logs', { params }),
+  getByEntity: (entityType: string, entityId: number, params?: any) =>
+    api.get(`/activity-logs/${entityType}/${entityId}`, { params }),
+};
+
 export default api;

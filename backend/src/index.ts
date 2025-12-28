@@ -18,6 +18,8 @@ import engineersRoutes from './routes/engineers';
 import tasksRoutes from './routes/tasks';
 import notificationsRoutes from './routes/notifications';
 import dashboardRoutes from './routes/dashboard';
+import commentsRoutes from './routes/comments';
+import activityLogsRoutes from './routes/activityLogs';
 
 dotenv.config();
 
@@ -50,6 +52,8 @@ app.use('/api/engineers', engineersRoutes);
 app.use('/api/tasks', tasksRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/comments', commentsRoutes);
+app.use('/api/activity-logs', activityLogsRoutes);
 
 app.use(errorHandler);
 

@@ -118,6 +118,26 @@ export interface Notification {
   created_at: Date;
 }
 
+export interface Comment {
+  id: number;
+  entity_type: string;
+  entity_id: number;
+  user_id: number;
+  content: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface ActivityLog {
+  id: number;
+  user_id: number;
+  action: string;
+  entity_type: string;
+  entity_id: number;
+  changes?: string;
+  created_at: Date;
+}
+
 export interface AuthRequest extends Express.Request {
   user?: User;
 }
