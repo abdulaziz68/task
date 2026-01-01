@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "Engineering PM",
+    "slug": "engineering-pm",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png"
+      }
+    }
+  }
+}
