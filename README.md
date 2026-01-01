@@ -1,32 +1,34 @@
-<div align="center">
-  <a href="https://taskfile.dev">
-    <img src="website/src/public/img/logo.svg" width="200px" height="200px" />
-  </a>
+# Engineering Project Management System
 
-  <h1>Task</h1>
+تطبيق متكامل لإدارة المشاريع الهندسية
 
-  <p>
-    Task is a task runner / build tool that aims to be simpler and easier to use than, for example, <a href="https://www.gnu.org/software/make/">GNU Make<a>.
-  </p>
+## البدء السريع
 
-  <p>
-    <a href="https://taskfile.dev/docs/installation">Installation</a> | <a href="https://taskfile.dev/docs/getting-started">Getting Started</a> | <a href="https://taskfile.dev/docs/guide">Docs</a> | <a href="https://twitter.com/taskfiledev">Twitter</a> | <a href="https://bsky.app/profile/taskfile.dev">Bluesky</a> | <a href="https://fosstodon.org/@task">Mastodon</a> | <a href="https://discord.gg/6TY36E39UK">Discord</a>
-  </p>
+### المتطلبات:
+- Docker و Docker Compose
+- Node.js 18+
+- npm أو yarn
 
-  <h1>Gold Sponsors</h1>
+### التثبيت والتشغيل:
 
-  <table>
-    <tr>
-      <td align="center" valign="middle">
-        <a target="_blank" href="https://devowl.io">
-          <img src="website/src/public/img/devowl.io.svg" height="100px" width="200px" title="devowl.io" />
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a target="_blank" href="https://magic.dev/">
-          <img src="website/src/public/img/magic.png" height="100px" width="200px" title="Magic" />
-        </a>
-      </td>
-    </tr>
-  </table>
-</div>
+```bash
+# استنساخ المشروع
+git clone [repository-url]
+cd engineering-pm
+
+# تشغيل جميع الخدمات
+docker-compose up -d
+
+# الوصول للتطبيق
+# الويب: http://localhost:5173
+# API: http://localhost:3000
+# قاعدة البيانات: localhost:5432
+```
+
+## الهيكل
+- backend/ - API و الخوادم
+- frontend/ - واجهة الويب
+- mobile/ - تطبيق الموبايل
+
+## الترخيص
+MIT

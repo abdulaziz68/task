@@ -11,7 +11,9 @@ import {
 import { team } from './team.ts';
 import { taskDescription, taskName, ogUrl, ogImage } from './meta.ts';
 import { fileURLToPath, URL } from 'node:url';
-import llmstxt, { copyOrDownloadAsMarkdownButtons } from 'vitepress-plugin-llms';
+import llmstxt, {
+  copyOrDownloadAsMarkdownButtons
+} from 'vitepress-plugin-llms';
 
 const version = readFileSync(
   resolve(__dirname, '../../internal/version/version.txt'),
@@ -79,29 +81,29 @@ export default defineConfig({
       }
     ],
     [
-      "script",
+      'script',
       {
-        defer: "",
-        src: "https://u.taskfile.dev/script.js",
-        "data-website-id": "084030b0-0e3f-4891-8d2a-0c12c40f5933"
+        defer: '',
+        src: 'https://u.taskfile.dev/script.js',
+        'data-website-id': '084030b0-0e3f-4891-8d2a-0c12c40f5933'
       }
     ]
   ],
   transformHead({ pageData }) {
-    const head: HeadConfig[] = []
+    const head: HeadConfig[] = [];
 
     // Canonical URL dynamique
     const canonicalUrl = `https://taskfile.dev/${pageData.relativePath
       .replace(/\.md$/, '')
-      .replace(/index$/, '')}`
-    head.push(['link', { rel: 'canonical', href: canonicalUrl }])
+      .replace(/index$/, '')}`;
+    head.push(['link', { rel: 'canonical', href: canonicalUrl }]);
 
     // Noindex pour 404
     if (pageData.relativePath === '404.md') {
-      head.push(['meta', { name: 'robots', content: 'noindex, nofollow' }])
+      head.push(['meta', { name: 'robots', content: 'noindex, nofollow' }]);
     }
 
-    return head
+    return head;
   },
   srcDir: 'src',
   cleanUrls: true,
